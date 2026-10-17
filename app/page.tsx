@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MetricCard } from "@/components/MetricCard";
 import { WhatsAppRemindButton } from "@/components/WhatsAppRemindButton";
 import { addDaysISO, formatDate, todayISO } from "@/lib/dates";
@@ -104,7 +105,9 @@ export default async function DashboardPage() {
               return (
                 <li key={c.id} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
-                    <p className="truncate font-medium">{c.name}</p>
+                    <Link href={`/clients/${c.id}`} className="block truncate font-medium hover:text-emerald-700">
+                      {c.name}
+                    </Link>
                     <p className="mt-0.5 text-sm text-slate-500">
                       {c.package_name} · +{c.phone}
                       {c.trainers?.name && ` · Trainer: ${c.trainers.name}`}

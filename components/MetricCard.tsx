@@ -1,6 +1,6 @@
 type Props = {
   label: string;
-  value: number;
+  value: number | string;
   hint?: string;
   tone?: "slate" | "emerald" | "amber";
 };
