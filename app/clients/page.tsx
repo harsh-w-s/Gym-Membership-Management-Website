@@ -17,7 +17,7 @@ const SORTS = {
   expiry_asc: { label: "Expiry (soonest first)", column: "expiry_date", ascending: true },
   expiry_desc: { label: "Expiry (latest first)", column: "expiry_date", ascending: false },
   name_asc: { label: "Name (A–Z)", column: "name", ascending: true },
-  newest: { label: "Newest first", column: "created_at", ascending: false },
+  joined_desc: { label: "Recently joined", column: "joined_on", ascending: false },
   due_desc: { label: "Highest balance due", column: "balance_due", ascending: false },
 } as const;
 type SortKey = keyof typeof SORTS;

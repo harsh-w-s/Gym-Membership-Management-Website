@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { todayISO } from "@/lib/dates";
 import { parseMoney } from "@/lib/money";
 import { isValidIntlPhone, sanitizePhone } from "@/lib/phone";
 import { getSupabase } from "@/lib/supabase/server";
@@ -15,6 +16,7 @@ type ClientField =
   | "package_name"
   | "package_fee"
   | "amount_paid"
+  | "joined_on"
   | "expiry_date"
   | "trainer_id";
 
@@ -36,6 +38,7 @@ function parseClientForm(formData: FormData) {
   const packageName = get("package_name");
   const packageFee = parseMoney(get("package_fee"));
   const amountPaid = parseMoney(get("amount_paid"));
+  const joinedOn = get("joined_on");
   const expiryDate = get("expiry_date");
   const trainerId = get("trainer_id");
 
@@ -48,7 +51,11 @@ function parseClientForm(formData: FormData) {
   if (!packageName) errors.package_name = "Package is required.";
   if (Number.isNaN(packageFee)) errors.package_fee = "Enter a valid amount, e.g. 1500 or 1500.50.";
   if (Number.isNaN(amountPaid)) errors.amount_paid = "Enter a valid amount, e.g. 1500 or 1500.50.";
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(expiryDate)) errors.expiry_date = "Pick a valid date.";
+  const isDate = (d: string) => /^\d{4}-\d{2}-\d{2}$/.test(d);
+  if (!isDate(joinedOn)) errors.joined_on = "Pick a valid date.";
+  else if (joinedOn > todayISO()) errors.joined_on = "Joining date can't be in the future.";
+  if (!isDate(expiryDate)) errors.expiry_date = "Pick a valid date.";
+  else if (isDate(joinedOn) && expiryDate < joinedOn) errors.expiry_date = "Expiry can't be before the joining date.";
   if (trainerId && !UUID.test(trainerId)) errors.trainer_id = "Invalid trainer.";
 
   if (Object.keys(errors).length > 0) return { errors } as const;
@@ -62,6 +69,7 @@ function parseClientForm(formData: FormData) {
       package_name: packageName,
       package_fee: packageFee ?? 0,
       amount_paid: amountPaid ?? 0,
+      joined_on: joinedOn,
       expiry_date: expiryDate,
       trainer_id: trainerId || null,
     },

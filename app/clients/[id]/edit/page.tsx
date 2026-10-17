@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { updateClient } from "@/app/clients/actions";
 import { ClientForm } from "@/components/ClientForm";
+import { todayISO } from "@/lib/dates";
 import { getTrainerOptions } from "@/lib/queries";
 import { getSupabase } from "@/lib/supabase/server";
 import type { Client } from "@/lib/types";
@@ -32,7 +33,7 @@ export default async function EditClientPage({ params }: { params: Promise<{ id:
         <p className="mt-1 text-sm text-slate-500">Update membership, payment or contact details.</p>
       </header>
       {/* .bind fixes the first argument (id) so the form only passes (prevState, formData). */}
-      <ClientForm trainers={trainers} client={client} action={updateClient.bind(null, client.id)} />
+      <ClientForm trainers={trainers} client={client} action={updateClient.bind(null, client.id)} today={todayISO()} />
     </div>
   );
 }
