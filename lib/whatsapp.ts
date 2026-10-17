@@ -15,7 +15,9 @@ export function buildReminderMessage({ name, packageName, expiryDate, gymName, t
   const status =
     expiryDate === today
       ? `expires today (${when})`
-      : `expired on ${when}`;
+      : expiryDate > today
+        ? `expires on ${when}`
+        : `expired on ${when}`;
 
   return [
     `Hello ${firstName}, 👋`,

@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 
 const NAV = [
   { href: "/", label: "Dashboard", icon: "📊" },
+  { href: "/clients", label: "Clients", icon: "👥" },
   { href: "/add-client", label: "Add Client", icon: "➕" },
+  { href: "/trainers", label: "Trainers", icon: "🏋️‍♂️" },
 ];
 
 export function Sidebar({ gymName }: { gymName: string }) {
@@ -19,7 +21,8 @@ export function Sidebar({ gymName }: { gymName: string }) {
       </div>
       <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:pb-0">
         {NAV.map(({ href, label, icon }) => {
-          const active = pathname === href;
+          // "/clients" stays highlighted on /clients/123 and /clients/123/edit too.
+          const active = href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
           return (
             <Link
               key={href}

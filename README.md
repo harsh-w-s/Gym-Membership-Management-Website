@@ -9,20 +9,30 @@ Membership renewal reminders go out through WhatsApp `wa.me` deep links, so ther
 app/
   layout.tsx              Dashboard shell + sidebar
   page.tsx                Metrics + "Action Required" expiry list (server component)
-  add-client/
-    page.tsx              Loads trainers for the dropdown (server component)
-    AddClientForm.tsx     Validated form + phone sanitisation (client component)
-    actions.ts            Server Action: re-validates + inserts into Supabase
+  add-client/page.tsx     New client form
+  clients/
+    page.tsx              Search + filters (status, trainer, payment, blood group, package), paginated
+    [id]/page.tsx         Client details, payment summary, WhatsApp reminder, delete
+    [id]/edit/page.tsx    Edit client
+    actions.ts            Server Actions: create / update / delete (validated server-side)
+  trainers/
+    page.tsx              Trainer list, client counts, total monthly salaries
+    new/page.tsx          Add trainer
+    [id]/edit/page.tsx    Edit / delete trainer + their assigned clients
+    actions.ts            Server Actions: create / update / delete
 components/
-  Sidebar.tsx, MetricCard.tsx, WhatsAppRemindButton.tsx
+  ClientForm.tsx, TrainerForm.tsx   Shared add/edit forms (client components)
+  Sidebar.tsx, MetricCard.tsx, StatusBadge.tsx, DeleteButton.tsx, WhatsAppRemindButton.tsx, form.tsx
 lib/
   supabase/server.ts      Server-only Supabase client (service-role key)
+  queries.ts              Shared reads (trainer dropdown)
   phone.ts                sanitizePhone / isValidIntlPhone
+  money.ts                Currency formatting/parsing (GYM_CURRENCY)
   whatsapp.ts             Reminder message + wa.me URL builder
   dates.ts                "Today" in the gym's timezone, date formatting
   types.ts
 proxy.ts                  HTTP Basic Auth gate for the owner
-supabase/migrations/      SQL schema (trainers, clients, RLS, seed trainers)
+supabase/migrations/      SQL schema: tables + RLS, then fees/payments + trainer salary
 ```
 
 ## Setup

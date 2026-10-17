@@ -6,6 +6,7 @@ export type Trainer = {
   name: string;
   phone: string | null;
   speciality: string | null;
+  salary: number; // monthly
   created_at: string;
 };
 
@@ -16,7 +17,19 @@ export type Client = {
   age: number | null;
   blood_group: BloodGroup | null;
   package_name: string;
+  package_fee: number;
+  amount_paid: number;
+  balance_due: number; // generated column: package_fee - amount_paid
   expiry_date: string; // YYYY-MM-DD (Postgres `date`)
   trainer_id: string | null;
   created_at: string;
+};
+
+export type TrainerOption = Pick<Trainer, "id" | "name" | "speciality">;
+
+/** Field-level errors returned by Server Actions to the forms. */
+export type FormState<F extends string = string> = {
+  status: "idle" | "success" | "error";
+  message?: string;
+  fieldErrors?: Partial<Record<F, string>>;
 };
