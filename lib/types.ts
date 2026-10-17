@@ -20,6 +20,7 @@ export type Client = {
   package_fee: number;
   amount_paid: number;
   balance_due: number; // generated column: package_fee - amount_paid
+  joined_on: string; // YYYY-MM-DD
   expiry_date: string; // YYYY-MM-DD (Postgres `date`)
   trainer_id: string | null;
   created_at: string;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/app/clients/actions";
 import { ClientForm } from "@/components/ClientForm";
+import { todayISO } from "@/lib/dates";
 import { getTrainerOptions } from "@/lib/queries";
 
 export const metadata: Metadata = { title: "Add Client" };
@@ -15,7 +16,7 @@ export default async function AddClientPage() {
         <h1 className="text-2xl font-semibold tracking-tight">Add Client</h1>
         <p className="mt-1 text-sm text-slate-500">Register a new member and assign a trainer.</p>
       </header>
-      <ClientForm trainers={trainers} action={createClient} />
+      <ClientForm trainers={trainers} action={createClient} today={todayISO()} />
     </div>
   );
 }

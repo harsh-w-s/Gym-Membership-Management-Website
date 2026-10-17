@@ -15,9 +15,11 @@ type Props = {
   action: (prev: ClientFormState, formData: FormData) => Promise<ClientFormState>;
   /** Present when editing an existing client. */
   client?: Client;
+  /** Today's date (YYYY-MM-DD) in the gym's timezone, computed on the server. */
+  today: string;
 };
 
-export function ClientForm({ trainers, action, client }: Props) {
+export function ClientForm({ trainers, action, client, today }: Props) {
   const isEdit = !!client;
   const [state, formAction, pending] = useActionState(action, INITIAL);
   const [phone, setPhone] = useState(client ? `+${client.phone}` : "");
@@ -116,7 +118,7 @@ export function ClientForm({ trainers, action, client }: Props) {
         </Field>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-5 sm:grid-cols-3">
         <Field label="Package name" error={err("package_name")}>
           <input
             name="package_name"
@@ -135,6 +137,18 @@ export function ClientForm({ trainers, action, client }: Props) {
             <option value="Annual" />
             <option value="Personal Training – Monthly" />
           </datalist>
+        </Field>
+        <Field label="Joining date" error={err("joined_on")}>
+          {/* Defaults to today (gym timezone); change it when entering old notebook records. */}
+          <input
+            name="joined_on"
+            type="date"
+            required
+            max={today}
+            defaultValue={client?.joined_on ?? today}
+            className={inputCls}
+            aria-invalid={!!err("joined_on")}
+          />
         </Field>
         <Field label="Expiry date" error={err("expiry_date")}>
           <input

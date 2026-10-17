@@ -100,7 +100,7 @@ export default async function ClientDetailPage({
           </Row>
           <Row label="Age">{client.age ?? "—"}</Row>
           <Row label="Blood group">{client.blood_group ?? "—"}</Row>
-          <Row label="Member since">{formatDate(client.created_at.slice(0, 10))}</Row>
+          <Row label="Joined on">{formatDate(client.joined_on)}</Row>
         </Card>
 
         <Card title="Membership">
