@@ -13,8 +13,13 @@ app/
   clients/
     page.tsx              Search + filters (status, trainer, payment, blood group, package), paginated
     [id]/page.tsx         Client details, payment summary, WhatsApp reminder, delete
-    [id]/edit/page.tsx    Edit client
-    actions.ts            Server Actions: create / update / delete (validated server-side)
+    [id]/edit/page.tsx    Edit personal details
+    [id]/renew/           New membership period + optional payment
+    [id]/payment/         Record a payment (e.g. balance of a part payment)
+    [id]/memberships/     Correct a membership period
+    [id]/money-actions.ts Server Actions for renewals / payments / memberships
+    actions.ts            Server Actions: create (client+membership+payment) / update / delete
+  settings/packages/      Package catalogue (name, duration, price)
   trainers/
     page.tsx              Trainer list, client counts, total monthly salaries
     new/page.tsx          Add trainer
@@ -32,7 +37,9 @@ lib/
   dates.ts                "Today" in the gym's timezone, date formatting
   types.ts
 proxy.ts                  HTTP Basic Auth gate for the owner
-supabase/migrations/      SQL schema: tables + RLS, then fees/payments + trainer salary
+supabase/migrations/      SQL schema: tables + RLS, fees, salary, joining date, then
+                          packages / memberships / payments ledger (+ triggers that keep
+                          clients' fee/paid/expiry totals in sync)
 ```
 
 ## Setup

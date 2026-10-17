@@ -30,7 +30,7 @@ export default async function EditClientPage({ params }: { params: Promise<{ id:
       </Link>
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">Edit Client</h1>
-        <p className="mt-1 text-sm text-slate-500">Update membership, payment or contact details.</p>
+        <p className="mt-1 text-sm text-slate-500">Update contact and personal details.</p>
       </header>
       {/* .bind fixes the first argument (id) so the form only passes (prevState, formData). */}
       <ClientForm trainers={trainers} client={client} action={updateClient.bind(null, client.id)} today={todayISO()} />
