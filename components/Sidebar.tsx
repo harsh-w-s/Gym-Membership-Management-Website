@@ -8,6 +8,7 @@ const NAV = [
   { href: "/clients", label: "Clients", icon: "👥" },
   { href: "/add-client", label: "Add Client", icon: "➕" },
   { href: "/trainers", label: "Trainers", icon: "🏋️‍♂️" },
+  { href: "/settings/packages", label: "Packages", icon: "📦" },
 ];
 
 export function Sidebar({ gymName }: { gymName: string }) {
