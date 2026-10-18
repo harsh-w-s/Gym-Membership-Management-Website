@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { MetricCard } from "@/components/MetricCard";
 import { WhatsAppRemindButton } from "@/components/WhatsAppRemindButton";
-import { addDaysISO, formatDate, todayISO } from "@/lib/dates";
+import { addDaysISO, formatDate, monthEndISO, monthStartISO, todayISO } from "@/lib/dates";
+import { getBreakdown } from "@/lib/finance";
+import { formatMoney } from "@/lib/money";
 import { getSupabase } from "@/lib/supabase/server";
 import { buildReminderMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 
@@ -58,7 +60,10 @@ async function getDashboardData(today: string) {
 export default async function DashboardPage() {
   const today = todayISO();
   const gymName = process.env.GYM_NAME || "the gym";
-  const { totalCount, activeCount, upcomingCount, expiring } = await getDashboardData(today);
+  const [{ totalCount, activeCount, upcomingCount, expiring }, month] = await Promise.all([
+    getDashboardData(today),
+    getBreakdown(monthStartISO(today), monthEndISO(today)),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -67,7 +72,7 @@ export default async function DashboardPage() {
         <p className="mt-1 text-sm text-slate-500">Today is {formatDate(today)}</p>
       </header>
 
-      <section className="grid gap-4 sm:grid-cols-3" aria-label="Summary">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Summary">
         <MetricCard label="Total Clients" value={totalCount} />
         <MetricCard label="Active Members" value={activeCount} tone="emerald" />
         <MetricCard
@@ -76,6 +81,14 @@ export default async function DashboardPage() {
           tone="amber"
           hint={upcomingCount > 0 ? `+${upcomingCount} more lapsing in the next 7 days` : "Expired or due today"}
         />
+        <Link href="/money" className="block rounded-xl transition hover:ring-2 hover:ring-emerald-200">
+          <MetricCard
+            label="Money in this month"
+            value={formatMoney(month.revenue)}
+            tone="emerald"
+            hint={`Profit so far: ${month.revenue - month.expenses < 0 ? "−" : ""}${formatMoney(Math.abs(month.revenue - month.expenses))} →`}
+          />
+        </Link>
       </section>
 
       <section className="overflow-hidden rounded-xl border border-amber-200 bg-white shadow-sm">
