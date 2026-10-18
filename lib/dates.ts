@@ -42,3 +42,27 @@ export function formatDate(iso: string): string {
     timeZone: "UTC",
   }).format(new Date(`${iso}T00:00:00Z`));
 }
+
+/** "2026-10-18" -> "2026-10-01". */
+export function monthStartISO(iso: string): string {
+  return `${iso.slice(0, 7)}-01`;
+}
+
+/** Last day of the month: "2026-02-10" -> "2026-02-28". */
+export function monthEndISO(iso: string): string {
+  return addDaysISO(addMonthsISO(monthStartISO(iso), 1), -1);
+}
+
+/** Reads a "YYYY-MM" URL param; falls back to the current month. Returns the 1st of that month. */
+export function parseMonthParam(value: unknown, today: string): string {
+  return typeof value === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(value) ? `${value}-01` : monthStartISO(today);
+}
+
+/** "2026-10-01" -> "October 2026" (or "Oct" with short=true). */
+export function formatMonth(iso: string, short = false): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    month: short ? "short" : "long",
+    ...(short ? {} : { year: "numeric" }),
+    timeZone: "UTC",
+  }).format(new Date(`${iso.slice(0, 7)}-01T00:00:00Z`));
+}

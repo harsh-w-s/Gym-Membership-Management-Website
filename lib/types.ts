@@ -84,3 +84,41 @@ export type FormState<F extends string = string> = {
   message?: string;
   fieldErrors?: Partial<Record<F, string>>;
 };
+
+export const EXPENSE_CATEGORIES = {
+  rent: "Rent",
+  electricity: "Electricity",
+  water: "Water",
+  internet: "Internet",
+  salary: "Salary",
+  equipment: "Equipment",
+  maintenance: "Maintenance",
+  marketing: "Marketing",
+  other: "Other",
+} as const;
+export type ExpenseCategory = keyof typeof EXPENSE_CATEGORIES;
+
+/** One time money went out. */
+export type Expense = {
+  id: string;
+  category: ExpenseCategory;
+  description: string | null;
+  amount: number;
+  spent_on: string;
+  method: PaymentMethod;
+  recurring_bill_id: string | null;
+  trainer_id: string | null;
+  bill_month: string | null; // 1st of the month this bill/salary is for
+  created_at: string;
+};
+
+/** A bill that's due every month (rent, internet...). */
+export type RecurringBill = {
+  id: string;
+  name: string;
+  category: ExpenseCategory;
+  amount: number; // usual amount; 0 = varies
+  due_day: number;
+  is_active: boolean;
+  created_at: string;
+};
